@@ -299,6 +299,59 @@ class SolidWorksBackend:
         except Exception as exc:
             raise SolidWorksError(f"Could not create box feature: {exc}") from exc
 
+    def create_mounting_plate(
+        self,
+        width: float,
+        depth: float,
+        thickness: float,
+        corner_hole_radius: float,
+        center_hole_radius: float,
+        inset_x: float,
+        inset_y: float,
+        template: str | None = None,
+    ) -> dict[str, Any]:
+        doc_info = self.new_part(template=template)
+        doc = self.active_document()
+        try:
+            try:
+                doc.ClearSelection2(True)
+            except Exception:
+                pass
+            try:
+                doc.Extension.SelectByID2("Front Plane", "PLANE", 0, 0, 0, False, 0, None, 0)
+            except Exception:
+                pass
+            doc.SketchManager.InsertSketch(True)
+            doc.SketchManager.CreateCenterRectangle(0, 0, 0, width / 2.0, depth / 2.0, 0)
+            for x in (-inset_x, inset_x):
+                for y in (-inset_y, inset_y):
+                    doc.SketchManager.CreateCircleByRadius(x, y, 0, corner_hole_radius)
+            doc.SketchManager.CreateCircleByRadius(0, 0, 0, center_hole_radius)
+            doc.SketchManager.InsertSketch(True)
+            feature = doc.FeatureManager.FeatureExtrusion2(
+                True, False, False, 0, 0, thickness, 0.0, False, False, False, False,
+                0.0, 0.0, False, False, False, False, True, True, True, 0, 0, False
+            )
+            if feature is None:
+                raise SolidWorksError("FeatureExtrusion2 returned no feature.")
+            doc.ViewZoomtofit2()
+            return {
+                "ok": True,
+                "operation": "create_mounting_plate",
+                "dimensions_m": {
+                    "width": width,
+                    "depth": depth,
+                    "thickness": thickness,
+                    "corner_hole_radius": corner_hole_radius,
+                    "center_hole_radius": center_hole_radius,
+                    "inset_x": inset_x,
+                    "inset_y": inset_y,
+                },
+                "document": doc_info,
+            }
+        except Exception as exc:
+            raise SolidWorksError(f"Could not create mounting plate: {exc}") from exc
+
     def run_macro(self, macro_path: str, module: str = "", procedure: str = "") -> dict[str, Any]:
         app = self.connect(create=True)
         target = str(Path(macro_path).resolve())

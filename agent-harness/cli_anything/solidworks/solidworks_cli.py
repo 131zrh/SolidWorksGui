@@ -261,6 +261,48 @@ def part_box(width: float, depth: float, height: float, template: str | None, sa
         _handle_error(exc)
 
 
+@part.command("mounting-plate")
+@click.option("--width", default=0.17, show_default=True, type=float, help="Plate width in meters.")
+@click.option("--depth", default=0.11, show_default=True, type=float, help="Plate depth in meters.")
+@click.option("--thickness", default=0.016, show_default=True, type=float, help="Plate thickness in meters.")
+@click.option("--corner-hole-radius", default=0.008, show_default=True, type=float, help="Corner hole radius in meters.")
+@click.option("--center-hole-radius", default=0.026, show_default=True, type=float, help="Center hole radius in meters.")
+@click.option("--inset-x", default=0.060, show_default=True, type=float, help="Corner hole X offset from center in meters.")
+@click.option("--inset-y", default=0.035, show_default=True, type=float, help="Corner hole Y offset from center in meters.")
+@click.option("--template", type=click.Path(exists=True), help="Optional part template path.")
+@click.option("--save-as", "save_as_path", type=click.Path(), help="Optional output .SLDPRT path.")
+def part_mounting_plate(
+    width: float,
+    depth: float,
+    thickness: float,
+    corner_hole_radius: float,
+    center_hole_radius: float,
+    inset_x: float,
+    inset_y: float,
+    template: str | None,
+    save_as_path: str | None,
+) -> None:
+    """Create a plate with four mounting holes and a center bore."""
+    try:
+        get_session().snapshot("part-mounting-plate")
+        result = _backend().create_mounting_plate(
+            width=width,
+            depth=depth,
+            thickness=thickness,
+            corner_hole_radius=corner_hole_radius,
+            center_hole_radius=center_hole_radius,
+            inset_x=inset_x,
+            inset_y=inset_y,
+            template=template,
+        )
+        if save_as_path:
+            result["save"] = _backend().save_as(save_as_path)
+            get_session().set_active_document(save_as_path, result["save"]["document"].get("title"))
+        _emit(result)
+    except Exception as exc:
+        _handle_error(exc)
+
+
 @cli.command("open")
 @click.argument("path", type=click.Path(exists=True))
 @click.option("--type", "doc_type", type=click.Choice(["part", "assembly", "drawing"]), help="Override document type.")

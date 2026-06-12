@@ -12,6 +12,7 @@ Always prefer `--json` for agent use:
 ```powershell
 cli-anything-solidworks --json doctor
 cli-anything-solidworks --project demo.session.json --json part box --width 0.08 --depth 0.05 --height 0.02 --save-as demo_box.SLDPRT
+cli-anything-solidworks --project demo.session.json --json part mounting-plate --save-as demo_plate.SLDPRT
 cli-anything-solidworks --project demo.session.json --json preview capture --output-root .
 ```
 

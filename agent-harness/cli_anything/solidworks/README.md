@@ -23,6 +23,7 @@ cli-anything-solidworks --json doctor
 cli-anything-solidworks --json status
 cli-anything-solidworks --project demo.session.json project new demo.session.json
 cli-anything-solidworks --project demo.session.json part box --width 0.08 --depth 0.05 --height 0.02 --save-as demo.SLDPRT --json
+cli-anything-solidworks --project demo.session.json part mounting-plate --save-as plate.SLDPRT --json
 cli-anything-solidworks --project demo.session.json view isometric
 cli-anything-solidworks --project demo.session.json export screenshot preview.bmp --json
 ```
@@ -41,6 +42,7 @@ cli-anything-solidworks
 - `project new/info/save/undo/redo`: manage session state.
 - `part new`: create a new part from a template or default part template.
 - `part box`: create a simple extruded rectangular block in a real part document.
+- `part mounting-plate`: create a plate with four mounting holes and a center bore.
 - `open`: open `.SLDPRT`, `.SLDASM`, or `.SLDDRW` files.
 - `save-as`: save the active document to a target path.
 - `rebuild`: force rebuild the active document.

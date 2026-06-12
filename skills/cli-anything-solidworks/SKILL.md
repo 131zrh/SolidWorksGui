@@ -38,6 +38,7 @@ Create and preview a block part:
 ```powershell
 cli-anything-solidworks --project demo.session.json --json project new demo.session.json
 cli-anything-solidworks --project demo.session.json --json part box --width 0.08 --depth 0.05 --height 0.02 --save-as demo_box.SLDPRT
+cli-anything-solidworks --project demo.session.json --json part mounting-plate --save-as demo_plate.SLDPRT
 cli-anything-solidworks --project demo.session.json --json view isometric
 cli-anything-solidworks --project demo.session.json --json preview capture --output-root .
 ```
@@ -62,7 +63,7 @@ cli-anything-solidworks --project macro.session.json --json run-macro C:\macros\
 - `launch`: launch `SLDWORKS.exe` when discoverable.
 - `status`: return active document metadata.
 - `project`: create, inspect, save, undo, and redo session state.
-- `part`: create a new part or a simple extruded box.
+- `part`: create a new part, a simple extruded box, or a mounting plate with holes.
 - `open`: open `.SLDPRT`, `.SLDASM`, or `.SLDDRW`.
 - `save-as`: save the active document.
 - `rebuild`: force-rebuild the active document.
