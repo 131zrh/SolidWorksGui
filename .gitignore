@@ -1,0 +1,11 @@
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+demo-output*/
+.cli-anything/
+*.session.json
+*.SLDPRT
+*.SLDASM
+*.SLDDRW
+*.bmp
